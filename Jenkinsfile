@@ -36,7 +36,7 @@ Install Docker CLI inside WSL, or enable Docker Desktop WSL integration.
 
         stage('Clone Repository') {
             steps {
-                git branch: 'main', url: 'https://github.com/ThashmikaX/chatapplication-frontend.git'
+                git branch: 'main', url: 'https://github.com/Lavindu-Aththanayaka/chatapplication-frontend.git'
             }
         }
 
@@ -47,7 +47,7 @@ Install Docker CLI inside WSL, or enable Docker Desktop WSL integration.
                     if (fileExists('Dockerfile')) {
                         sh '''
                             set -e
-                            docker build --platform linux/amd64 -t thashmika/frontend1:latest .
+                            docker build --platform linux/amd64 -t lavindu/frontend1:latest .
                         '''
                     } else {
                         error 'Dockerfile not found in the repository.'
@@ -59,7 +59,7 @@ Install Docker CLI inside WSL, or enable Docker Desktop WSL integration.
         stage('Login to Docker Hub') {
             steps {
                 withCredentials([usernamePassword(
-                    credentialsId: '729ffe19-b9e0-43e7-8777-1d8c07af99bc',
+                    credentialsId: 'ec4dcb1b-cbaa-4f8e-9dc3-6d8616667b49',
                     usernameVariable: 'DOCKER_USERNAME',
                     passwordVariable: 'DOCKER_PASSWORD'
                 )]) {
@@ -76,13 +76,13 @@ Install Docker CLI inside WSL, or enable Docker Desktop WSL integration.
                 script {
                     echo 'Pushing Docker image to Docker Hub...'
                     def imageId = sh(
-                        script: 'docker images -q thashmika/frontend1:latest',
+                        script: 'docker images -q lavindu/frontend1:latest',
                         returnStdout: true
                     ).trim()
 
                     if (imageId) {
                         retry(3) {
-                            sh 'docker push thashmika/frontend1:latest'
+                            sh 'docker push lavindu/frontend1:latest'
                         }
                     } else {
                         error 'Docker image not found. Build step might have failed.'
@@ -96,7 +96,7 @@ Install Docker CLI inside WSL, or enable Docker Desktop WSL integration.
                 sh '''
                     docker stop frontend || true
                     docker rm -f frontend || true
-                    docker run -d --name frontend -p 3000:3000 --restart unless-stopped thashmika/frontend1:latest
+                    docker run -d --name frontend -p 3000:3000 --restart unless-stopped lavindu/frontend1:latest
                 '''
             }
         }
